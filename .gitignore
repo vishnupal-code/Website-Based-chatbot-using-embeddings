@@ -42,5 +42,8 @@ chroma_db/
 .DS_Store
 Thumbs.db
 
+# Streamlit
+.streamlit/secrets.toml
+
 # Logs
 *.log

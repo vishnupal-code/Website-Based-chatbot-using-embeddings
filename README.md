@@ -213,6 +213,48 @@ streamlit run app.py
 
 The application will open in your default browser at `http://localhost:8501`
 
+## ☁️ Deploying to Streamlit Cloud
+
+The app **automatically detects** the environment and switches between:
+- **Local**: Ollama with Llama 3.2:1b
+- **Cloud**: HuggingFace API with Mistral-7B-Instruct (free)
+
+### Step-by-Step Cloud Deployment:
+
+**1. Get HuggingFace Token (Free)**
+- Visit https://huggingface.co/settings/tokens
+- Click "New token"
+- Name it (e.g., "streamlit-chatbot")
+- Select "Read" role
+- Copy the token
+
+**2. Deploy to Streamlit Cloud**
+- Go to https://share.streamlit.io/
+- Click "New app"
+- Repository: `vishnupal-code/Website-Based-chatbot-using-embeddings`
+- Branch: `main`
+- Main file: `app.py`
+- Click "Advanced settings"
+
+**3. Add Secrets**
+In the "Secrets" section, paste:
+```toml
+HUGGINGFACE_API_TOKEN = "your_token_here"
+```
+
+**4. Deploy!**
+Click "Deploy" and your app will be live in minutes.
+
+### Cloud vs Local Comparison:
+| Feature | Local (Ollama) | Cloud (HuggingFace) |
+|---------|----------------|---------------------|
+| Model | Llama 3.2:1b | Mistral-7B-Instruct |
+| Speed | Very Fast | Moderate |
+| Setup | Requires Ollama | Just API token |
+| Privacy | 100% Local | Uses HF API |
+| Cost | Free | Free (with limits) |
+| Accessibility | Local only | Anywhere |
+
 ## 📖 How to Use
 
 1. **Enter Website URL**
