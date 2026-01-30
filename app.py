@@ -24,6 +24,14 @@ if "rag_chain" not in st.session_state:
     st.session_state.rag_chain = None
 if "indexed" not in st.session_state:
     st.session_state.indexed = False
+# Clear RAG chain if environment changed (helps with cloud deployment)
+if "llm_env" not in st.session_state:
+    st.session_state.llm_env = "cloud" if os.environ.get("HUGGINGFACE_API_TOKEN") else "local"
+else:
+    current_env = "cloud" if os.environ.get("HUGGINGFACE_API_TOKEN") else "local"
+    if st.session_state.llm_env != current_env:
+        st.session_state.rag_chain = None
+        st.session_state.llm_env = current_env
 
 # Sidebar
 with st.sidebar:
