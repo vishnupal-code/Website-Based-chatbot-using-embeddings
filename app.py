@@ -9,11 +9,9 @@ from langchain_core.messages import HumanMessage, AIMessage
 st.set_page_config(page_title="Website Chatbot", layout="wide")
 st.title("🌐 Website-Based Chatbot")
 
-# Display environment info in sidebar
-if os.environ.get("HUGGINGFACE_API_TOKEN"):
-    st.sidebar.success("🌐 Running on Cloud with HuggingFace API")
-else:
-    st.sidebar.info("💻 Running locally with Ollama")
+# Display LLM info in sidebar
+st.sidebar.success("🚀 Powered by Groq (Llama 3.3 70B)")
+st.sidebar.caption("Fast AI inference with LPU technology")
 
 # Session State Initialization
 if "chat_history" not in st.session_state:
