@@ -2,45 +2,30 @@ from langchain_classic.chains import create_history_aware_retriever, create_retr
 from langchain_classic.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.messages import HumanMessage
+from langchain_groq import ChatGroq
 import os
-import requests
 
 class RAGChain:
-    def __init__(self, retriever, model_name="llama3.2:1b"):
+    def __init__(self, retriever, model_name="llama-3.3-70b-versatile"):
         self.retriever = retriever
         
-        # Detect if Ollama is available (local) or use HuggingFace (cloud)
-        if self._is_ollama_available():
-            from langchain_community.chat_models import ChatOllama
-            self.llm = ChatOllama(model=model_name, temperature=0)
-            self.llm_type = "ollama"
-        else:
-            # Use HuggingFace for cloud deployment
-            from langchain_huggingface import HuggingFaceEndpoint
-            hf_token = os.environ.get("HUGGINGFACE_API_TOKEN", "")
-            if not hf_token:
-                raise ValueError(
-                    "Running on Streamlit Cloud requires HUGGINGFACE_API_TOKEN. "
-                    "Please add it to your Streamlit secrets. "
-                    "Get a free token at https://huggingface.co/settings/tokens"
-                )
-            self.llm = HuggingFaceEndpoint(
-                repo_id="mistralai/Mistral-7B-Instruct-v0.2",
-                huggingfacehub_api_token=hf_token,
-                temperature=0.1,
-                max_new_tokens=512
+        # Always use Groq - fast and reliable
+        groq_api_key = os.environ.get("GROQ_API_KEY", "")
+        if not groq_api_key:
+            raise ValueError(
+                "GROQ_API_KEY is required. "
+                "Get your free API key at: https://console.groq.com/keys"
             )
-            self.llm_type = "huggingface"
+        
+        # Using Llama 3.3 70B on Groq - blazing fast inference
+        self.llm = ChatGroq(
+            model=model_name,
+            groq_api_key=groq_api_key,
+            temperature=0,
+            max_tokens=512
+        )
         
         self.chain = self._build_chain()
-    
-    def _is_ollama_available(self):
-        """Check if Ollama is running locally"""
-        try:
-            response = requests.get("http://localhost:11434/api/tags", timeout=2)
-            return response.status_code == 200
-        except:
-            return False
 
     def _build_chain(self):
         # 1. Contextualize question (for history)
